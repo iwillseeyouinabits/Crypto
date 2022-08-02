@@ -1,5 +1,5 @@
 import socket
-import sleep from time
+import time
 
 class Server:
 
@@ -14,11 +14,11 @@ class Server:
         try:
             self.socket.bind((self.ip, self.port))
         except:
-            sleep(5)
+            time.sleep(5)
             clientsocket.close()
             self.socket.close()
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sleep(5)
+            time.sleep(5)
             print("<Connection Fault...>")
             self.receive()
         self.socket.listen(5)
