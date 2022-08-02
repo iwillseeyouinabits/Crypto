@@ -12,9 +12,9 @@ class Server:
 
     def receive(self):
         self.socket.bind((self.ip, self.port))
+        self.socket.listen(5)
         clientsocket, address = self.socket.accept()
-        print("=> ", end='')
-        msgOut = input()
+        msgOut = input("=> ")
         clientsocket.send(bytes(msgOut,"utf-8"))
         clientsocket.shutdown()
         clientsocket.close()
