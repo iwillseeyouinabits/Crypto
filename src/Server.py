@@ -11,11 +11,9 @@ class Server:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def receive(self):
-        time.sleep(5)
         self.socket.bind((self.ip, self.port))
-        self.socket.listen(5)
         clientsocket, address = self.socket.accept()
-        print("_______________________________________________")
+        print("=> ", end='')
         msgOut = input()
         clientsocket.send(bytes(msgOut,"utf-8"))
         clientsocket.shutdown()
@@ -25,8 +23,7 @@ class Server:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect()
 
-    def connect(self):
-        time.sleep(8)
+    def connect(self):\
         self.socket.connect((self.ip2, self.port2))
         msgIn = self.socket.recv(2**12).decode("utf-8")
         print(" => " + msgIn)
