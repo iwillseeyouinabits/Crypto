@@ -14,12 +14,11 @@ class Server:
         try:
             self.socket.bind((self.ip, self.port))
         except:
+            print("<Connection Fault...>")
             time.sleep(5)
-            clientsocket.close()
             self.socket.close()
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             time.sleep(5)
-            print("<Connection Fault...>")
             self.receive()
         self.socket.listen(5)
         clientsocket, address = self.socket.accept()
