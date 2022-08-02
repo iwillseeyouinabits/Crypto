@@ -18,7 +18,8 @@ class Server:
             msgOut = input("=> ")
             if msgOut == "CLOSE":
                 self.socket.close()
-                clientsocket.close
+                clientsocket.close()
+                break
             clientsocket.send(bytes(msgOut,"utf-8"))
             msgIn = clientsocket.recv(2**12).decode("utf-8")
             print(" => " + msgIn)
@@ -32,4 +33,5 @@ class Server:
             msgOut = input("=> ")
             if msgOut == "CLOSE":
                 self.socket.close()
+                break
             self.socket.send(bytes(msgOut, "utf-8"))
