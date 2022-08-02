@@ -23,7 +23,7 @@ class Server:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect()
 
-    def connect(self):\
+    def connect(self):
         self.socket.connect((self.ip2, self.port2))
         msgIn = self.socket.recv(2**12).decode("utf-8")
         print(" => " + msgIn)
