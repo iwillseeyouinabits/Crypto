@@ -14,16 +14,22 @@ class Server:
         self.socket.bind((self.ip, self.port))
         self.socket.listen(5)
         clientsocket, address = self.socket.accept()
-        msgOut = input("=> ")
-        clientsocket.send(bytes(msgOut,"utf-8"))
-        clientsocket.shutdown(socket.SHUT_RDWR)
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connect()
+        while True:
+            msgOut = input("=> ")
+            if msgOut == "CLOSE":
+                self.socket.close()
+                clientsocket.close
+            clientsocket.send(bytes(msgOut,"utf-8"))
+            msgIn = clientsocket.recv(2**12).decode("utf-8")
+            print(" => " + msgIn)
+            
 
     def connect(self):
         self.socket.connect((self.ip2, self.port2))
-        msgIn = self.socket.recv(2**12).decode("utf-8")
-        print(" => " + msgIn)
-        self.socket.shutdown(socket.SHUT_RDWR)
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.receive()
+        while True:
+            msgIn = self.socket.recv(2**12).decode("utf-8")
+            print(" => " + msgIn)
+            msgOut = input("=> ")
+            if msgOut == "CLOSE":
+                self.socket.close()
+            self.socket.send(bytes(msgOut, "utf-8"))
