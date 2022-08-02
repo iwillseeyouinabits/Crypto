@@ -17,7 +17,6 @@ class Server:
         msgOut = input("=> ")
         clientsocket.send(bytes(msgOut,"utf-8"))
         clientsocket.shutdown(socket.SHUT_RDWR)
-        self.socket.shutdown(socket.SHUT_RDWR)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect()
 
