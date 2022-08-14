@@ -37,7 +37,7 @@ class Server:
         while True:
             msgIn = ""
             while True:
-                msgIn =+ clientsocket.recv(1).decode("utf-8")
+                msgIn =+ self.socket.recv(1).decode("utf-8")
                 try:
                     msgIn = json.loads(msgIn)
                     break
