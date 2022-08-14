@@ -1,5 +1,5 @@
 import socket
-import time
+import json
 
 class Server:
 
@@ -21,14 +21,28 @@ class Server:
                 clientsocket.close()
                 break
             clientsocket.send(bytes(msgOut,"utf-8"))
-            msgIn = clientsocket.recv(2**12).decode("utf-8")
+            msgIn = ""
+            while True:
+                msgIn =+ clientsocket.recv(1).decode("utf-8")
+                try:
+                    msgIn = json.loads(msgIn)
+                    break
+                except:
+                    continue
             print(" => " + msgIn)
             
 
     def connect(self):
         self.socket.connect((self.ip2, self.port2))
         while True:
-            msgIn = self.socket.recv(2**12).decode("utf-8")
+            msgIn = ""
+            while True:
+                msgIn =+ clientsocket.recv(1).decode("utf-8")
+                try:
+                    msgIn = json.loads(msgIn)
+                    break
+                except:
+                    continue
             print(" => " + msgIn)
             msgOut = input("=> ")
             if msgOut == "CLOSE":
