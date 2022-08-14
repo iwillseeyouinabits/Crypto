@@ -15,12 +15,17 @@ class Server:
         self.socket.listen(5)
         clientsocket, address = self.socket.accept()
         while True:
-            msgOut = input("=> ")
-            if msgOut == "CLOSE":
-                self.socket.close()
-                clientsocket.close()
-                break
-            clientsocket.send(bytes(msgOut,"utf-8"))
+            while True:
+                msgOut = input("=> ")       
+                if msgOut == "CLOSE":
+                    self.socket.close()
+                    clientsocket.close()
+                    break
+                try:
+                    json.loads(msgOut)
+                    clientsocket.send(bytes(msgOut,"utf-8"))
+                except:
+                    continue
             msgIn = ""
             while True:
                 msgIn += clientsocket.recv(1).decode("utf-8")
@@ -46,8 +51,13 @@ class Server:
                 except:
                     continue
             print(" => " + msgIn)
-            msgOut = input("=> ")
-            if msgOut == "CLOSE":
-                self.socket.close()
-                break
-            self.socket.send(bytes(msgOut, "utf-8"))
+            while True:
+                msgOut = input("=> ")
+                if msgOut == "CLOSE":
+                    self.socket.close()
+                    break
+                try:
+                    json.loads(msgOut)
+                    self.socket.send(bytes(msgOut, "utf-8"))
+                except:
+                    continue
