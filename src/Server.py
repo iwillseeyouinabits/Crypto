@@ -20,10 +20,11 @@ class Server:
                 if msgOut == "CLOSE":
                     self.socket.close()
                     clientsocket.close()
-                    break
+                    return
                 try:
                     json.loads(msgOut)
                     clientsocket.send(bytes(msgOut,"utf-8"))
+                    break
                 except:
                     continue
             msgIn = ""
@@ -55,9 +56,10 @@ class Server:
                 msgOut = input("=> ")
                 if msgOut == "CLOSE":
                     self.socket.close()
-                    break
+                    return
                 try:
                     json.loads(msgOut)
                     self.socket.send(bytes(msgOut, "utf-8"))
+                    break
                 except:
                     continue
