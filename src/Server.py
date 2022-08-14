@@ -28,6 +28,7 @@ class Server:
                     msgIn = json.loads(msgIn)
                     break
                 except:
+                    msgIn = str(msgIn)
                     continue
             print(" => " + msgIn)
             
@@ -42,6 +43,7 @@ class Server:
                     msgIn = json.loads(msgIn)
                     break
                 except:
+                    msgIn = str(msgIn)
                     continue
             print(" => " + msgIn)
             msgOut = input("=> ")
