@@ -26,9 +26,9 @@ class Server:
                 msgIn += clientsocket.recv(1).decode("utf-8")
                 try:
                     msgIn = json.loads(msgIn)
+                    msgIn = str(msgIn)
                     break
                 except:
-                    msgIn = str(msgIn)
                     continue
             print(" => " + msgIn)
             
@@ -41,9 +41,9 @@ class Server:
                 msgIn += self.socket.recv(1).decode("utf-8")
                 try:
                     msgIn = json.loads(msgIn)
+                    msgIn = str(msgIn)
                     break
                 except:
-                    msgIn = str(msgIn)
                     continue
             print(" => " + msgIn)
             msgOut = input("=> ")
