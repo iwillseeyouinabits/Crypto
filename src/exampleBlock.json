@@ -1,0 +1,52 @@
+{
+    "block_hash" : "026c4114d5902641c57d6361671a86a9dee09327801487da18fffa018b9e2159",
+    "block" : {
+        "block_height" : 0,
+        "previous_block_hash" : null,
+        "minner_address" : "d7e2821af667e97efe6ea3daf2f231e6974c7a62c2881f11be42bdda72fc0250",
+        "block_size" : 2552,
+        "timestamp" : 1659049690,
+        "nonce" : 2,
+        "currency" : [
+            {
+                "transaction_hash" : "b777e14fcae4e1c9372e0052460d082281701489c631df169ad3190066bc9cd6",
+                "transaction_signature" : "304402202ceff61156a698c4d167c8d6c497d207ece048822096fe8cfe4b54279e72d7e602204a0462b5062b33ecb681f5c953a0768cab50638fda47828f57bbc449a83bdf78",
+                "base_fee" : 0.0025,
+                "gass_fee" : 0.00000265,
+                "transaction_body" : {
+                    "sender_adress" : "e089838f049db93e0900fec080410f23ceeaba9eec896680e356f4f013a390ce",
+                    "recipient_adress" : "a48aab4d05e32426237e0e0c3c7c3d3459654799b92b75a1b1327312033a8f77",
+                    "tokens" : 5.5
+                }
+            }
+        ],
+        "http" : [
+            {
+                "http_hash" : "b7d331e81773b6e2b4260d5f54e78a5bc204cde01e2f63d4ba6dd74524b841f3",
+                "http_signature" : "30450221009fcbea954989ba50c0d60a60983f4213a90b83b18e11ec298ba2f4945cb6197a02205f9d36cd0cf0ab5e6e5fee80ba72fd754ea56a7c373124aafe9c1e2ab5d98b96",
+                "base_fee" : 0.0025,
+                "gass_fee" : 0.00000545,
+                "http_body" : {
+                    "host_adress" : "b2608a0b2e19050351f997c14eaf1d80bcb50e03d0711e158e29bb6ec49c126f",
+                    "client_adress" : "9e0f892b91cb926705232288e197e84f2d4c62005d268d375979226e63c6e249",
+                    "website_adress" : "768f50e7628785e1cd01f4d6f3abc33f35afcf3096fa5f9871e2ebc87b4bcdb1",
+                    "http_request" : "768f50e7628785e1cd01f4d6f3abc33f35afcf3096fa5f9871e2ebc87b4bcdb1/products.php?parent=Latte&file=true&ad=nope",
+                    "host_URL" : "https://webdevboys.tech/crypto"
+                }
+            }
+        ],
+        "shell" : [
+            {
+                "shell_hash" : "b469ed38e1f24d8b06137f291d0d407c3d18f5c1090abd56429151168702e85b",
+                "shell_signature" : "3045022100bfd4435dbcdfd6c834463e05af8647933d5eef217f59f359150881b72d34719402201686677481e6064fd737c9c3e912bdb23e9e1465841c864f16a9006e6b05c4b6",
+                "base_fee" : 0.0025,
+                "gass_fee" : 0.00000399,
+                "shell_body" : {
+                    "website_name" : "ride share",
+                    "website_adress" : "e8b614d9b3313efc179ab0f7d349cd607cb07832e75363d06e7fce848f78b4c3",
+                    "shell_script" : "#!/usr/bin/env bash\nRESPONSE=\"HTTP/1.1 200 OK\\r\\nConnection: keep-alive\\r\\n\\r\\n${2:-\"OK\"}\\r\\n\"\nwhile { echo -en \"$RESPONSE\"; } | nc -l \"${1:-8080}\"; do\n  echo \"================================================\"\ndone"
+                }
+            }
+        ]
+    }
+}

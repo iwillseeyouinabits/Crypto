@@ -36,8 +36,7 @@ class Server:
                     break
                 except:
                     continue
-            print(" => " + msgIn)
-            
+            print(" => " + msgIn) 
 
     def connect(self):
         self.socket.connect((self.ip2, self.port2))
