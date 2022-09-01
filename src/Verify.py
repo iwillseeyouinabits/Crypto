@@ -113,6 +113,8 @@ class Verify:
             return False
         if not self.signature(transaction["transaction_signature"], transaction["transaction_body"], rsa.PublicKey.load_pkcs1_openssl_der(transaction["transaction_body"]["sender_adress"].encode('utf-8'))):
             return False
+        if not (transaction["base_fee"] == 0.0025 or self.gassFee(transaction["transaction_body"], transaction["gass_fee"])):
+            return False
         return True
 
     def http(self, transaction, cashSums):
@@ -127,6 +129,8 @@ class Verify:
             return False
         if not self.signature(transaction["http_signature"], transaction["http_body"], rsa.PublicKey.load_pkcs1_openssl_der(transaction["http_body"]["client_adress"].encode('utf-8'))):
             return False
+        if not (transaction["base_fee"] == 0.0025 or self.gassFee(transaction["http_body"], transaction["gass_fee"])):
+            return False
         return True
 
     def shell(self, transaction, cashSums):
@@ -137,4 +141,34 @@ class Verify:
         if wallet < 0:
             return False
         cashSums[transaction["shell_body"]["website_adress"]] = wallet
+        if not self.hash(transaction["shell_hash"], transaction["shell_body"]):
+            return False
+        if not self.signature(transaction["shell_signature"], transaction["shell_body"], rsa.PublicKey.load_pkcs1_openssl_der(transaction["shell_body"]["website_adress"].encode('utf-8'))):
+            return False
+        if not (transaction["base_fee"] == 0.0025 or self.gassFee(transaction["shell_body"], transaction["gass_fee"])):
+            return False
         return True
+
+    def verify(self):
+        blockFile = FW.FW("block.json")
+        block = json.loads(blockFile.read())
+        blockFile.close()
+        if not self.hash(block["block_hash"], block["block"]):
+            return False
+        if not self.blockHeight(block["block"]["block_height"]):
+            return False
+        if not self.previouseBlockHash(block["block"]["previous_block_hash"]):
+            return False
+        if not self.timeStamp(block["block"]["timestamp"]):
+            return False
+        cashSums = self.quantifyBlockChainCashTotal()
+        for transaction in block["block"]["currency"]:
+            if not self.currency(transaction, cashSums):
+                return False
+        for transaction in block["block"]["http"]:
+            if not self.http(transaction, cashSums):
+                return False
+        for transaction in block["block"]["shell"]:
+            if not self.shell(transaction, cashSums):
+                return False
+        return False
