@@ -4,7 +4,6 @@
         "block_height" : 0,
         "previous_block_hash" : null,
         "minner_address" : "d7e2821af667e97efe6ea3daf2f231e6974c7a62c2881f11be42bdda72fc0250",
-        "block_size" : 2552,
         "timestamp" : 1659049690,
         "nonce" : 2,
         "currency" : [
