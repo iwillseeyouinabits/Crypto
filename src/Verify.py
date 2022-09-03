@@ -26,8 +26,8 @@ class Verify:
         blockChainFile = FW.FW("blockChain.json")
         blockChain = json.loads(blockChainFile.read())
         blockChainFile.close()
-        if len(blockChain) > 1:
-            previoseBlockHash = blockChain[len(blockChain)-1]["previous_block_hash"]
+        if len(blockChain) > 0:
+            previoseBlockHash = blockChain[len(blockChain)-1]["block_hash"]
             if previoseBlockHash == hash:
                 return True
             return False
@@ -49,40 +49,37 @@ class Verify:
         blockChain = json.loads(blockChainFile.read())
         blockChainFile.close()
         cashSums = {}
-        try:
-            for block in blockChain:
+        for block in blockChain:
+            wallet = 0
+            if tuple(block["block"]["minner_address"]) in cashSums:
+                wallet += cashSums[tuple(block["block"]["minner_address"])]
+            wallet += 50000
+            cashSums[tuple(block["block"]["minner_address"])] = wallet
+            for transaction in block["block"]["currency"]:
                 wallet = 0
-                if tuple(block["block"]["minner_address"]) in cashSums:
-                    wallet += block["block"]["minner_address"]
-                wallet += 50000
-                cashSums[tuple(block["block"]["minner_address"])] = wallet
-                for transaction in block["block"]["currency"]:
-                    wallet = 0
-                    if transaction["transaction_body"]["sender_adress"] in cashSums:
-                        wallet += cashSums[tuple(transaction["transaction_body"]["sender_adress"])]
-                    wallet -= transaction["base_fee"] + transaction["gass_fee"] + transaction["transaction_body"]["tokens"]
-                    cashSums[tuple(transaction["transaction_body"]["sender_adress"])] = wallet
-                    wallet = 0
-                    if transaction["transaction_body"]["recipient_adress"] in cashSums:
-                        wallet += cashSums[tuple(transaction["transaction_body"]["recipient_adress"])]
-                    wallet += transaction["transaction_body"]["tokens"]
-                    cashSums[tuple(transaction["transaction_body"]["recipient_adress"])] = wallet
-                for transaction in block["block"]["http"]:
-                    wallet = 0
-                    if tuple(transaction["http_body"]["client_adress"]) in cashSums:
-                        wallet += cashSums[tuple(transaction["http_body"]["client_adress"])]
-                    wallet -= transaction["base_fee"] + transaction["gass_fee"]
-                    cashSums[tuple(transaction["http_body"]["client_adress"])] = wallet
-                for transaction in block["block"]["shell"]:
-                    wallet = 0
-                    if tuple(transaction["shell_body"]["website_adress"]) in cashSums:
-                        wallet += cashSums[tuple(transaction["shell_body"]["website_adress"])]
-                    wallet -= transaction["base_fee"] + transaction["gass_fee"]
-                    cashSums[tuple(transaction["shell_body"]["website_adress"])] = wallet
-            return cashSums
-        except Exception as e:
-            print(e)
-            return cashSums
+                if tuple(transaction["transaction_body"]["sender_adress"]) in cashSums:
+                    wallet += cashSums[tuple(transaction["transaction_body"]["sender_adress"])]
+                wallet -= transaction["base_fee"] + transaction["gass_fee"] + transaction["transaction_body"]["tokens"]
+                cashSums[tuple(transaction["transaction_body"]["sender_adress"])] = wallet
+                wallet = 0
+                if tuple(transaction["transaction_body"]["recipient_adress"]) in cashSums:
+                    wallet += cashSums[tuple(transaction["transaction_body"]["recipient_adress"])]
+                wallet += transaction["transaction_body"]["tokens"]
+                cashSums[tuple(transaction["transaction_body"]["recipient_adress"])] = wallet
+            for transaction in block["block"]["http"]:
+                wallet = 0
+                if tuple(transaction["http_body"]["client_adress"]) in cashSums:
+                    wallet += cashSums[tuple(transaction["http_body"]["client_adress"])]
+                wallet -= transaction["base_fee"] + transaction["gass_fee"]
+                cashSums[tuple(transaction["http_body"]["client_adress"])] = wallet
+            for transaction in block["block"]["shell"]:
+                wallet = 0
+                if tuple(transaction["shell_body"]["website_adress"]) in cashSums:
+                    wallet += cashSums[tuple(transaction["shell_body"]["website_adress"])]
+                wallet -= transaction["base_fee"] + transaction["gass_fee"]
+                cashSums[tuple(transaction["shell_body"]["website_adress"])] = wallet
+        return cashSums
+        
 
     def signature(self, signature, message, pk):
         signature = base64.b64decode(signature) #reverse of base64.b64encode(signature).decode("ascii")
@@ -124,12 +121,12 @@ class Verify:
 
     def http(self, transaction, cashSums):
         wallet = 0
-        if transaction["http_body"]["client_adress"] in cashSums:
-            wallet += cashSums[transaction["http_body"]["client_adress"]]
+        if tuple(transaction["http_body"]["client_adress"]) in cashSums:
+            wallet += cashSums[tuple(transaction["http_body"]["client_adress"])]
         wallet -= transaction["base_fee"] + transaction["gass_fee"]
         if wallet < 0:
             return False
-        cashSums[transaction["http_body"]["client_adress"]] = wallet
+        cashSums[tuple(transaction["http_body"]["client_adress"])] = wallet
         if not self.hash(transaction["http_hash"], transaction["http_body"]):
             return False
         if not self.signature(transaction["http_signature"], transaction["http_body"], rsa.PublicKey(transaction["http_body"]["client_adress"][0], transaction["http_body"]["client_adress"][1])):
@@ -140,12 +137,12 @@ class Verify:
 
     def shell(self, transaction, cashSums):
         wallet = 0
-        if transaction["shell_body"]["website_adress"] in cashSums:
-            wallet += cashSums[transaction["shell_body"]["website_adress"]]
+        if tuple(transaction["shell_body"]["website_adress"]) in cashSums:
+            wallet += cashSums[tuple(transaction["shell_body"]["website_adress"])]
         wallet -= transaction["base_fee"] + transaction["gass_fee"]
         if wallet < 0:
             return False
-        cashSums[transaction["shell_body"]["website_adress"]] = wallet
+        cashSums[tuple(transaction["shell_body"]["website_adress"])] = wallet
         if not self.hash(transaction["shell_hash"], transaction["shell_body"]):
             return False
         if not self.signature(transaction["shell_signature"], transaction["shell_body"], rsa.PublicKey(transaction["shell_body"]["website_adress"][0], transaction["shell_body"]["website_adress"][1])):
