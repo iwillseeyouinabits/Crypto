@@ -1,4 +1,5 @@
 import json
+from re import T
 import time
 import random
 import FW
@@ -6,6 +7,7 @@ import base64
 import hashlib
 import rsa
 from Verify import Verify
+from Server import Server
 
 class FileUpdater:
 
@@ -13,23 +15,35 @@ class FileUpdater:
     def currency(self, data):
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
-        block["block"]["currency"].append(data)
-        fileBlock.write(json.dumps(block, indent=4))
+        if not data in block["block"]["currency"]:
+            block["block"]["currency"].append(data)
+            fileBlock.write(json.dumps(block, indent=4))
+            fileBlock.close()
+            return True
         fileBlock.close()
+        return False
 
     def http(self, data):
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
-        block["block"]["http"].append(data)
-        fileBlock.write(json.dumps(block, indent=4))
+        if not data in block["block"]["http"]:
+            block["block"]["http"].append(data)
+            fileBlock.write(json.dumps(block, indent=4))
+            fileBlock.close()
+            return True
         fileBlock.close()
+        return False
 
     def shell(self, data):
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
-        block["block"]["shell"].append(data)
-        fileBlock.write(json.dumps(block, indent=4))
+        if not data in block["block"]["shell"]:
+            block["block"]["shell"].append(data)
+            fileBlock.write(json.dumps(block, indent=4))
+            fileBlock.close()
+            return True
         fileBlock.close()
+        return False
 
     def updateBlock(self):
         fileBlock = FW.FW("block.json")
@@ -65,6 +79,9 @@ class FileUpdater:
         sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
         trans["transaction_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["currency"].append(trans)
+        package = {"type": "currency"}
+        package["data"] = trans
+        Server().connect(str(package))
         print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
@@ -86,6 +103,9 @@ class FileUpdater:
         sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
         trans["http_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["http"].append(trans)
+        package = {"type": "currency"}
+        package["data"] = trans
+        Server().connect(str(package))
         print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
@@ -147,14 +167,23 @@ class FileUpdater:
             fileBlockChain.write(json.dumps(blockChain, indent=4))
             fileBlockChain.close()
             self.makeNewBlock(selfN, selfE)
+            return True
+        return False
 
-    def handleNewInfo(self, selfN, selfE, msg):
-        data = json.loads(msg)
+    def handleNewInfo(self, selfN, selfE, data):
+        cashSums = Verify().quantifyBlockChainCashTotal()
         if data["type"] == "block":
-            self.addBlockToChain(selfN, selfE, data)
+            if self.addBlockToChain(selfN, selfE, data["data"]):
+                Server().connect(str(data))
         elif data["type"] == "currency":
-            self.currency(data["type"])
+            if Verify().currency(data["data"], cashSums):
+                if self.currency(data["data"]):
+                    Server().connect(str(data))
         elif data["type"] == "http":
-            self.http(data["data"])
+            if Verify().http(data["data"], cashSums):
+                if self.http(data["data"]):
+                    Server().connect(str(data))
         elif data["type"] == "shell":
-            self.shell(data["data"])
+            if Verify().shell(data["data"], cashSums):
+                if self.shell(data["data"]):
+                    Server().connect(str(data))
