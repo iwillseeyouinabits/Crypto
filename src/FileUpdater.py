@@ -5,6 +5,7 @@ import FW
 import base64
 import hashlib
 import rsa
+from Verify import Verify
 
 class FileUpdater:
 
@@ -130,7 +131,39 @@ class FileUpdater:
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
 
+    def makeNewBlock(self, selfN, selfE):
+        fileBlockChain = FW.FW("blockChain.json")
+        blockChain = json.loads(fileBlockChain.read())
+        fileBlockChain.close()
+        wholeBlock = {}
+        wholeBlock["block_hash"] = ""
+        block = {}
+        block["block_height"] = len(blockChain)
+        try:
+            block["previous_block_hash"] = blockChain[-1]["block_hash"]
+        except:
+            block["previous_block_hash"] = None
+        block["minner_address"] = [selfN, selfE]
+        block["timestamp"] = int(time.time())
+        block["nonce"] = 0
+        block["currency"] = []
+        block["http"] = []
+        block["shell"] = []
+        wholeBlock["block"] = block
+        fileBlock = FW.FW("block.json")
+        fileBlock.write(json.dumps(wholeBlock, indent=4))
+        fileBlock.close()
+        self.updateBlock()
 
-
-        
-
+    def addBlockToChain(self, selfN, selfE, block=None):
+        if block == None:
+            fileBlock = FW.FW("block.json")
+            block = json.loads(fileBlock.read())
+            fileBlock.close()
+        if Verify().verify(block):
+            fileBlockChain = FW.FW("blockChain.json")
+            blockChain = json.loads(fileBlockChain.read())
+            blockChain.append(block)
+            fileBlockChain.write(json.dumps(blockChain, indent=4))
+            fileBlockChain.close()
+            self.makeNewBlock(selfN, selfE)

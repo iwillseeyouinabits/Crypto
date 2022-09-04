@@ -151,10 +151,11 @@ class Verify:
             return False
         return True
 
-    def verify(self):
-        blockFile = FW.FW("block.json")
-        block = json.loads(blockFile.read())
-        blockFile.close()
+    def verify(self, block = None):
+        if block == None:
+            blockFile = FW.FW("block.json")
+            block = json.loads(blockFile.read())
+            blockFile.close()
         if not self.hash(block["block_hash"], block["block"]):
             print("block hash invalid")
             return False
@@ -183,4 +184,5 @@ class Verify:
                 print("shell invalid")
                 print(transaction)
                 return False
+        print("GOOD BLOCK!   :D")
         return True
