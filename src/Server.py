@@ -1,13 +1,14 @@
 import socket
 import json
 import FileUpdater
+import IP.json
 class Server:
 
-    def __init__(self, ip, ip2):
-        self.ip = ip
-        self.port = 42022
+    def __init__(self):
+        self.ip =
+        self.port = 42069
         self.ip2 = ip2
-        self.port2 = 42022
+        self.port2 = 42404
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def receive(self):
