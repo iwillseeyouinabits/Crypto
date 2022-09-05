@@ -5,7 +5,7 @@ import fcntl
 import FileUpdater
 import json
 
-from src import FW
+import FW
 
 
 class Server:
