@@ -10,7 +10,7 @@ from src import FW
 
 class Server:
     def __init__(self):
-        self.ip = self.get_ip_address()
+        self.ip = self.get_ip_address("eth0")
         self.port = 42069
         self.ipDict = json.loads(FW.FW("IP.json").read())
         self.portOther = 42069
