@@ -103,7 +103,7 @@ class FileUpdater:
         sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
         trans["http_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["http"].append(trans)
-        package = {"type": "currency"}
+        package = {"type": "http"}
         package["data"] = trans
         Server().connect(str(package))
         print(json.dumps(block, indent=4))
@@ -127,6 +127,9 @@ class FileUpdater:
         sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
         trans["shell_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["shell"].append(trans)
+        package = {"type": "shell"}
+        package["data"] = trans
+        Server().connect(str(package))
         print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
