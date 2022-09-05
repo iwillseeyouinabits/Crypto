@@ -1,37 +1,44 @@
 import socket
 import json
+import FileUpdater
+import json
+
+from src import FW
+
 
 class Server:
 
-    def __init__(self, ip, ip2):
-        self.ip = ip
-        self.port = 42022
-        self.ip2 = ip2
-        self.port2 = 42022
+    def __init__(self):
+        self.ip = socket.gethostbyname(socket.gethostname())
+        self.port = 42069
+        self.ipDict = json.loads(FW.FW("IP.json").read())
+        self.portOther = 42404
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def receive(self):
-            print((self.ip, self.port))
-            self.socket.bind((self.ip, self.port))
-            self.socket.listen(500)
+        fileUpdater = FileUpdater.FileUpdater()
+        print((self.ip, self.port))
+        self.socket.bind((self.ip, self.port))
+        self.socket.listen(500)
+        while True:
+            clientsocket, address = self.socket.accept()
+            msgIn = ""
             while True:
-                clientsocket, address = self.socket.accept()
-                msgIn = ""
-                while True:
-                    msgIn += clientsocket.recv(1).decode("utf-8")
-                    try:
-                        msgIn = json.loads(msgIn)
-                        msgIn = str(msgIn)
-                        print(" => " + msgIn)
-                        break
-                    except:
-                        continue
+                msgIn += clientsocket.recv(1).decode("utf-8")
+                try:
+                    msgIn = json.loads(msgIn)
+                    msgIn = str(msgIn)
+                    fileUpdater.handleNewInfo(msgIn)
+                    break
+                except:
+                    continue
 
     def connect(self, msg):
-        print((self.ip2, self.port2))
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((self.ip2, self.port2))
         msgOut = msg
-        json.loads(msgOut)
-        self.socket.send(bytes(msgOut, "utf-8"))
-        self.socket.close()
+        print("Connecting to ")
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        for ip in self.ipDict:
+            print((ip, self.portOther))
+            self.socket.connect((ip, self.portOther))
+            self.socket.send(bytes(msgOut, "utf-8"))
+            self.socket.close()
