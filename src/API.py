@@ -1,5 +1,6 @@
 import FileUpdater
 import Server
+import json
 import Verify
 import threading
 
@@ -39,3 +40,11 @@ class API:
                 data = {"type": "block"}
                 data["data"] = block
                 Server().connect(str(data))
+
+    def api(self):
+        thread1 = threading.Thread(target=self.startReceiving, args=())
+        thread2 = threading.Thread(target=self.startMining, args=())
+        thread1.start()
+        thread2.start()
+        thread1.join()
+        thread2.join()
