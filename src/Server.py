@@ -4,7 +4,6 @@ import struct
 import fcntl
 import FileUpdater
 import json
-
 import FW
 
 
