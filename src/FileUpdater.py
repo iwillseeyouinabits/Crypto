@@ -6,8 +6,8 @@ import FW
 import base64
 import hashlib
 import rsa
-from Verify import Verify
-from Server import Server
+import Verify
+import Server
 
 class FileUpdater:
 
@@ -81,7 +81,7 @@ class FileUpdater:
         block["block"]["currency"].append(trans)
         package = {"type": "currency"}
         package["data"] = trans
-        Server().connect(str(package))
+        Server.Server().connect(str(package))
         print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
@@ -105,7 +105,7 @@ class FileUpdater:
         block["block"]["http"].append(trans)
         package = {"type": "http"}
         package["data"] = trans
-        Server().connect(str(package))
+        Server.Server().connect(str(package))
         print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
@@ -129,7 +129,7 @@ class FileUpdater:
         block["block"]["shell"].append(trans)
         package = {"type": "shell"}
         package["data"] = trans
-        Server().connect(str(package))
+        Server.Server().connect(str(package))
         print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
@@ -163,7 +163,7 @@ class FileUpdater:
             fileBlock = FW.FW("block.json")
             block = json.loads(fileBlock.read())
             fileBlock.close()
-        if Verify().verify(block):
+        if Verify.Verify().verify(block):
             fileBlockChain = FW.FW("blockChain.json")
             blockChain = json.loads(fileBlockChain.read())
             blockChain.append(block)
@@ -174,19 +174,19 @@ class FileUpdater:
         return False
 
     def handleNewInfo(self, selfN, selfE, data):
-        cashSums = Verify().quantifyBlockChainCashTotal()
+        cashSums = Verify.Verify().quantifyBlockChainCashTotal()
         if data["type"] == "block":
             if self.addBlockToChain(selfN, selfE, data["data"]):
-                Server().connect(str(data))
+                Server.Server().connect(str(data))
         elif data["type"] == "currency":
-            if Verify().currency(data["data"], cashSums):
+            if Verify.Verify().currency(data["data"], cashSums):
                 if self.currency(data["data"]):
-                    Server().connect(str(data))
+                    Server.Server().connect(str(data))
         elif data["type"] == "http":
-            if Verify().http(data["data"], cashSums):
+            if Verify.Verify().http(data["data"], cashSums):
                 if self.http(data["data"]):
-                    Server().connect(str(data))
+                    Server.Server().connect(str(data))
         elif data["type"] == "shell":
-            if Verify().shell(data["data"], cashSums):
+            if Verify.Verify().shell(data["data"], cashSums):
                 if self.shell(data["data"]):
-                    Server().connect(str(data))
+                    Server.Server().connect(str(data))
