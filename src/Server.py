@@ -37,6 +37,7 @@ class Server:
         print("Connecting to ")
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for ip in self.ipDict:
+
             print((ip, self.portOther))
             self.socket.connect((ip, self.portOther))
             self.socket.send(bytes(msgOut, "utf-8"))
