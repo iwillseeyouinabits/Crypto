@@ -1,13 +1,16 @@
 import socket
 import json
+import struct
+import fcntl
 import FileUpdater
 import json
-import FW
+
+from src import FW
 
 
 class Server:
     def __init__(self):
-        self.ip = socket.gethostbyname(socket.gethostname())
+        self.ip = self.get_ip_address("eth0")
         self.port = 42069
         self.ipDict = json.loads(FW.FW("IP.json").read())
         self.portOther = 42069
@@ -41,3 +44,10 @@ class Server:
             self.socket.connect((ip, self.portOther))
             self.socket.send(bytes(msgOut, "utf-8"))
             self.socket.close()
+    def get_ip_address(self, ifname):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        return socket.inet_ntoa(fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', ifname[:15])
+        )[20:24])
