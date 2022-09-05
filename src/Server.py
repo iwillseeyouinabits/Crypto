@@ -12,7 +12,7 @@ class Server:
         self.ip = socket.gethostbyname(socket.gethostname())
         self.port = 42069
         self.ipDict = json.loads(FW.FW("IP.json").read())
-        self.portOther = 42404
+        self.portOther = 42069
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def receive(self):
