@@ -1,14 +1,18 @@
 import socket
 import json
 import FileUpdater
-import IP.json
+import json
+
+from src import FW
+
+
 class Server:
 
     def __init__(self):
-        self.ip =
+        self.ip = socket.gethostbyname(socket.gethostname())
         self.port = 42069
-        self.ip2 = ip2
-        self.port2 = 42404
+        self.ipDict = json.loads(FW.FW("IP.json").read())
+        self.portOther = 42404
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def receive(self):
@@ -30,10 +34,11 @@ class Server:
                     continue
 
     def connect(self, msg):
-        print((self.ip2, self.port2))
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((self.ip2, self.port2))
         msgOut = msg
-        json.loads(msgOut)
-        self.socket.send(bytes(msgOut, "utf-8"))
-        self.socket.close()
+        print("Connecting to ")
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        for ip in self.ipDict:
+            print((ip, self.portOther))
+            self.socket.connect((ip, self.portOther))
+            self.socket.send(bytes(msgOut, "utf-8"))
+            self.socket.close()
