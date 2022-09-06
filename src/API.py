@@ -1,7 +1,7 @@
 import FileUpdater
 import Server
 import json
-import Verify
+import FW
 import threading
 
 class API:
@@ -12,7 +12,7 @@ class API:
         self.pSend = pSend
         self.qSend = qSend
 
-    def mine(self, numZeros=4):
+    def mine(self, numZeros=3):
         FileUpdater.FileUpdater().mine(numZeros)
     
     def addCurrency(self, nReceive, eReceive, tokens):
@@ -32,14 +32,17 @@ class API:
     
     def startMining(self):
         while True:
+            print("new mine")
             self.mine()
+            print("fin mine")
             if self.addBlockToChain():
+                print("here")
                 fileBlock = FW.FW("block.json")
                 block = json.loads(fileBlock.read())
                 fileBlock.close()
                 data = {"type": "block"}
                 data["data"] = block
-                Server().connect(str(data))
+                Server.Server().connect(str(data))
 
     def api(self):
         thread1 = threading.Thread(target=self.startReceiving, args=())

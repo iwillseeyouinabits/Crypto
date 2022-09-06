@@ -51,7 +51,6 @@ class FileUpdater:
         block["block"]["timestamp"] = int(time.time())
         block["block"]["nonce"] = random.randrange(1000000)
         block["block_hash"] = hashlib.sha256(str(block["block"]).encode('utf-8')).hexdigest()
-        print(json.dumps(block, indent=4))
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
 
