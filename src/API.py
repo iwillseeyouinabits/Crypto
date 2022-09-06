@@ -28,6 +28,7 @@ class API:
         return FileUpdater.FileUpdater().addBlockToChain(self.nSend, self.eSend, block)
     
     def startReceiving(self):
+        print("start receiving")
         Server.Server().receive()
     
     def startMining(self, n, e):
