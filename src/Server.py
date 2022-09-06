@@ -17,14 +17,19 @@ class Server:
         print((self.ip, self.port))
         self.socket.bind((self.ip, self.port))
         self.socket.listen(500)
+        print("listening on port")
         while True:
             clientsocket, address = self.socket.accept()
+            print("accepted connection")
             msgIn = ""
             while True:
+                print(".", end = "")
                 msgIn += clientsocket.recv(1).decode("utf-8")
+                print("_", end = "")
                 try:
                     msgIn = json.loads(msgIn)
                     msgIn = str(msgIn)
+                    print()
                     print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
