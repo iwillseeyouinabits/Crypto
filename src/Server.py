@@ -29,8 +29,8 @@ class Server:
                 print()
                 print(msgIn)
                 try:
-                    msgIn = json.loads(msgIn)
-                    msgIn = str(msgIn.replace("'", "\""))
+                    msgIn = json.loads(msgIn.replace("'", "\""))
+                    msgIn = str(msgIn)
                     print()
                     print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
