@@ -25,6 +25,7 @@ class Server:
                 try:
                     msgIn = json.loads(msgIn)
                     msgIn = str(msgIn)
+                    print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
                 except:
