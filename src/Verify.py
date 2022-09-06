@@ -164,7 +164,7 @@ class Verify:
             print("block height invalid")
             return False
         if not self.previouseBlockHash(block["block"]["previous_block_hash"]):
-            print("previouse block hash invalid")
+            print("previous block hash invalid")
             return False
         if not self.timeStamp(block["block"]["timestamp"]):
             print("timestamp invalid")

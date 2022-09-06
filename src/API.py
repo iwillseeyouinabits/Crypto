@@ -12,7 +12,7 @@ class API:
         self.pSend = pSend
         self.qSend = qSend
 
-    def mine(self, numZeros=3):
+    def mine(self, numZeros=2):
         FileUpdater.FileUpdater().mine(numZeros)
     
     def addCurrency(self, nReceive, eReceive, tokens):
