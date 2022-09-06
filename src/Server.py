@@ -39,11 +39,12 @@ class Server:
         msgOut = msg
         print("Connecting to ")
         for ip in self.ipDict:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((ip, self.portOther))
-            self.socket.send(bytes(msgOut, "utf-8"))
-            self.socket.close()
-            print("sent too => " + str((ip, self.portOther)))
+            if not ip == self.get_ip_address():
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.socket.connect((ip, self.portOther))
+                self.socket.send(bytes(msgOut, "utf-8"))
+                self.socket.close()
+                print("sent too => " + str((ip, self.portOther)))
 
 
     def get_ip_address(self):
