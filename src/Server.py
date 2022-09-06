@@ -24,9 +24,7 @@ class Server:
             print("accepted connection")
             msgIn = ""
             while True:
-                print(".", end = "")
                 msgIn += clientsocket.recv(1).decode("utf-8")
-                print("_", end = "")
                 try:
                     msgIn = json.loads(msgIn)
                     msgIn = str(msgIn)
