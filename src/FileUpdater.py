@@ -185,18 +185,21 @@ class FileUpdater:
         if data["type"] == "block":
             if self.addBlockToChain(selfN, selfE, data["data"]):
                 Server.Server().connect(str(data))
+                return True
         elif data["type"] == "currency":
             if Verify.Verify().currency(data["data"], cashSums):
                 if self.currency(data["data"]):
                     Server.Server().connect(str(data))
+                    return True
         elif data["type"] == "http":
             if Verify.Verify().http(data["data"], cashSums):
                 if self.http(data["data"]):
                     Server.Server().connect(str(data))
+                    return True
         elif data["type"] == "shell":
             if Verify.Verify().shell(data["data"], cashSums):
                 if self.shell(data["data"]):
                     Server.Server().connect(str(data))
-        else:
-            print("FAILED TO HAVE A 'type' FOR DATA")
-            raise ValueError("FAILED TO HAVE A 'type' FOR DATA")
+                    return True
+        print("FAILED TO HAVE A 'type' FOR DATA")
+        raise ValueError("FAILED TO HAVE A 'type' FOR DATA")
