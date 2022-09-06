@@ -27,7 +27,7 @@ class Server:
             while True:
                 msgIn += clientsocket.recv(1).decode("utf-8")
                 try:
-                    msgIn = json.load(msgIn)
+                    msgIn = json.loads(msgIn)
                     print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
