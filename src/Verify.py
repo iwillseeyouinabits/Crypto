@@ -38,9 +38,10 @@ class Verify:
         blockChain = json.loads(blockChainFile.read())
         blockChainFile.close()
         if len(blockChain) > 1:
-            stamp2 = blockChain[len(blockChain)-1]["block"]["timestamp"]
-            if stamp2 < stamp < int(time.time()):
+            stamp2 = blockChain[-1]["block"]["timestamp"]
+            if stamp2 <= stamp <= int(time.time()):
                 return True
+            print(str(stamp2) + " " + str(stamp) + " " + str(int(time.time())))
             return False
         return True
     
@@ -79,7 +80,7 @@ class Verify:
                 wallet -= transaction["base_fee"] + transaction["gass_fee"]
                 cashSums[tuple(transaction["shell_body"]["website_adress"])] = wallet
         return cashSums
-        
+
 
     def signature(self, signature, message, pk):
         signature = base64.b64decode(signature) #reverse of base64.b64encode(signature).decode("ascii")
