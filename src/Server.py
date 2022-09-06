@@ -6,7 +6,7 @@ import FW
 
 class Server:
     def __init__(self):
-        self.ip = self.get_ip_address("eth0")
+        self.ip = self.get_ip_address()
         self.port = 42069
         self.ipDict = json.loads(FW.FW("IP.json").read())
         self.portOther = 42069
@@ -25,7 +25,7 @@ class Server:
                 try:
                     msgIn = json.loads(msgIn)
                     msgIn = str(msgIn)
-                    fileUpdater.handleNewInfo(msgIn)
+                    fileUpdater.handleNewInfo(msgIn, *self.ipDict[self.get_ip_address()])
                     break
                 except:
                     continue
@@ -35,12 +35,13 @@ class Server:
         print("Connecting to ")
         for ip in self.ipDict:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            print((ip, self.portOther))
             self.socket.connect((ip, self.portOther))
             self.socket.send(bytes(msgOut, "utf-8"))
             self.socket.close()
+            print("sent too => " + str((ip, self.portOther)))
 
-    def get_ip_address(self, ifname):
+
+    def get_ip_address(self):
         import socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))

@@ -12,8 +12,8 @@ class API:
         self.pSend = pSend
         self.qSend = qSend
 
-    def mine(self, numZeros=4):
-        FileUpdater.FileUpdater().mine(numZeros)
+    def mine(self, n, e, numZeros=4):
+        FileUpdater.FileUpdater().mine(numZeros, n, e)
     
     def addCurrency(self, nReceive, eReceive, tokens):
         FileUpdater.FileUpdater().addCurrency(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, nReceive, eReceive, tokens)
@@ -30,16 +30,15 @@ class API:
     def startReceiving(self):
         Server.Server().receive()
     
-    def startMining(self):
+    def startMining(self, n, e):
         while True:
             print("new mine")
-            self.mine()
+            self.mine(n, e)
+            fileBlock = FW.FW("block.json")
+            block = json.loads(fileBlock.read())
+            fileBlock.close()
             print("fin mine")
             if self.addBlockToChain():
-                print("here")
-                fileBlock = FW.FW("block.json")
-                block = json.loads(fileBlock.read())
-                fileBlock.close()
                 data = {"type": "block"}
                 data["data"] = block
                 Server.Server().connect(str(data))

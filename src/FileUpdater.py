@@ -45,13 +45,14 @@ class FileUpdater:
         fileBlock.close()
         return False
 
-    def updateBlock(self):
+    def updateBlock(self, n, e):
         fileBlockChain = FW.FW("blockChain.json")
         blockChain = json.loads(fileBlockChain.read())
         fileBlockChain.close()
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
         block["block"]["timestamp"] = int(time.time())
+        block["block"]["minner_address"] = [n, e]
         block["block"]["nonce"] = random.randrange(1000000)
         block["block"]["block_height"] = len(blockChain)
         block["block"]["previous_block_hash"] = blockChain[-1]["block_hash"]
@@ -59,9 +60,9 @@ class FileUpdater:
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
 
-    def mine(self, numZeros):
+    def mine(self, numZeros, n, e):
         while True:
-            self.updateBlock()
+            self.updateBlock(n, e)
             fileBlock = FW.FW("block.json") 
             block = json.loads(fileBlock.read())
             if(block["block_hash"][:numZeros] == numZeros*"0"):
@@ -167,6 +168,8 @@ class FileUpdater:
             fileBlock = FW.FW("block.json")
             block = json.loads(fileBlock.read())
             fileBlock.close()
+        else:
+            print("received new block")
         if Verify.Verify().verify(block):
             fileBlockChain = FW.FW("blockChain.json")
             blockChain = json.loads(fileBlockChain.read())
@@ -194,3 +197,6 @@ class FileUpdater:
             if Verify.Verify().shell(data["data"], cashSums):
                 if self.shell(data["data"]):
                     Server.Server().connect(str(data))
+        else:
+            print("FAILED TO HAVE A 'type' FOR DATA")
+            raise ValueError("FAILED TO HAVE A 'type' FOR DATA")
