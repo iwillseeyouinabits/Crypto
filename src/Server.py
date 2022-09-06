@@ -30,7 +30,7 @@ class Server:
                 print()
                 print(msgIn)
                 try:
-                    msgIn = json.load(self.correctSingleQuoteJSON(msgIn))
+                    msgIn = json.load(msgIn)
                     msgIn = str(msgIn)
                     print()
                     print("RECEIVED!!!")
