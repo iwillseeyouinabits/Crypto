@@ -25,7 +25,7 @@ class Server:
                 try:
                     msgIn = json.loads(msgIn)
                     msgIn = str(msgIn)
-                    fileUpdater.handleNewInfo(msgIn, *self.ipDict[self.get_ip_address()])
+                    fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
                 except:
                     continue
