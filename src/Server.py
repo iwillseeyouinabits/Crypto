@@ -30,10 +30,13 @@ class Server:
                 try:
                     msgIn = json.loads(msgIn.replace("\'", "\""))
                     print("RECEIVED!!!")
-                    fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
-                    break
-                except Exception:
-                    print(traceback.format_exc())
+                    try:
+                        fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
+                        break
+                    except Exception:
+                        print(traceback.format_exc())
+                except:
+                    continue
 
     def connect(self, msg):
         msgOut = msg
