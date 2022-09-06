@@ -46,7 +46,6 @@ class Server:
                 self.socket.close()
                 print("sent too => " + str((ip, self.portOther)))
 
-
     def get_ip_address(self):
         import socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
