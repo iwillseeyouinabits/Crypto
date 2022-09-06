@@ -201,5 +201,7 @@ class FileUpdater:
                 if self.shell(data["data"]):
                     Server.Server().connect(json.dumps(data))
                     return True
-        print("FAILED TO HAVE A 'type' FOR DATA")
-        raise ValueError("FAILED TO HAVE A 'type' FOR DATA")
+        else:
+            print("FAILED TO HAVE A 'type' FOR DATA")
+            raise ValueError("FAILED TO HAVE A 'type' FOR DATA")
+        return False

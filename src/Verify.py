@@ -20,6 +20,7 @@ class Verify:
         length = len(blockChain)
         if height == length:
             return True
+        print(str(height) + " " + str(length))
         return False
 
     def previouseBlockHash(self, hash):
