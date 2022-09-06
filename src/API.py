@@ -45,7 +45,7 @@ class API:
 
     def api(self):
         thread1 = threading.Thread(target=self.startReceiving, args=())
-        thread2 = threading.Thread(target=self.startMining, args=())
+        thread2 = threading.Thread(target=self.startMining, args=(self.nSend, self.eSend))
         thread1.start()
         thread2.start()
         thread1.join()
