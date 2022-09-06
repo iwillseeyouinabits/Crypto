@@ -2,6 +2,7 @@ import socket
 import FileUpdater
 import json
 import FW
+import ast
 
 
 class Server:
@@ -29,7 +30,7 @@ class Server:
                 print()
                 print(msgIn)
                 try:
-                    msgIn = json.loads(msgIn.replace("'", "\""))
+                    msgIn = ast.literal_eval(msgIn)
                     msgIn = str(msgIn)
                     print()
                     print("RECEIVED!!!")
