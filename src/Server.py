@@ -2,7 +2,7 @@ import socket
 import FileUpdater
 import json
 import FW
-import ast
+import traceback
 
 
 class Server:
@@ -31,9 +31,8 @@ class Server:
                     print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
-                except Exception as e:
-                    print(e)
-                    continue
+                except Exception:
+                    print(traceback.format_exc())
 
     def connect(self, msg):
         msgOut = msg
