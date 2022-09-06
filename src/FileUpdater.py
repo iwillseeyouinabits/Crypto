@@ -161,7 +161,7 @@ class FileUpdater:
         fileBlock = FW.FW("block.json")
         fileBlock.write(json.dumps(wholeBlock, indent=4))
         fileBlock.close()
-        self.updateBlock()
+        self.updateBlock(selfN, selfE)
 
     def addBlockToChain(self, selfN, selfE, block=None):
         if block == None:
