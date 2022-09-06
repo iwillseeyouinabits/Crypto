@@ -30,7 +30,7 @@ class Server:
                 print()
                 print(msgIn)
                 try:
-                    msgIn = ast.literal_eval(msgIn)
+                    msgIn = json.load(self.correctSingleQuoteJSON(msgIn))
                     msgIn = str(msgIn)
                     print()
                     print("RECEIVED!!!")
@@ -56,3 +56,23 @@ class Server:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         return s.getsockname()[0]
+    
+    def correctSingleQuoteJSON(self, s):
+        rstr = ""
+        escaped = False
+
+        for c in s:
+        
+            if c == "'" and not escaped:
+                c = '"' # replace single with double quote
+            
+            elif c == "'" and escaped:
+                rstr = rstr[:-1] # remove escape character before single quotes
+            
+            elif c == '"':
+                c = '\\' + c # escape existing double quotes
+    
+            escaped = (c == "\\") # check for an escape character
+            rstr += c # append the correct json
+        
+        return rstr
