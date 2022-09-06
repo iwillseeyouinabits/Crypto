@@ -33,8 +33,8 @@ class Server:
     def connect(self, msg):
         msgOut = msg
         print("Connecting to ")
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for ip in self.ipDict:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             print((ip, self.portOther))
             self.socket.connect((ip, self.portOther))
             self.socket.send(bytes(msgOut, "utf-8"))
