@@ -27,15 +27,13 @@ class Server:
             msgIn = ""
             while True:
                 msgIn += clientsocket.recv(1).decode("utf-8")
-                try:      
-                    p = re.compile('(?<!\\\\)\'')
-                    data = p.sub('\"', msgIn)
-                    msgIn = json.loads(data)
+                try:
+                    msgIn = json.loads(msgIn.replace("\'", "\""))
                     print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
                 except Exception:
-                    print(msgIn)
+                    print(msgIn.replace("\'", "\""))
                     print(traceback.format_exc())
 
     def connect(self, msg):
