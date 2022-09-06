@@ -35,7 +35,8 @@ class Server:
                     print("RECEIVED!!!")
                     fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     continue
 
     def connect(self, msg):
