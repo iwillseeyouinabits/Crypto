@@ -25,6 +25,9 @@ class Server:
             msgIn = ""
             while True:
                 msgIn += clientsocket.recv(1).decode("utf-8")
+                print()
+                print()
+                print(msgIn)
                 try:
                     msgIn = json.loads(msgIn)
                     msgIn = str(msgIn)
