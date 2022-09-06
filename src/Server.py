@@ -14,8 +14,9 @@ class Server:
 
     def receive(self):
         fileUpdater = FileUpdater.FileUpdater()
-        print((self.ip, self.port))
+        print(str((self.ip, self.port)) + " !!!")
         self.socket.bind((self.ip, self.port))
+        print("binded")
         self.socket.listen(500)
         print("listening on port")
         while True:
