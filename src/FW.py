@@ -1,8 +1,8 @@
 import portalocker
 
 class FW:
-    def __init__(self, file):
-        file = open(file, "+r")
+    def __init__(self, fileName):
+        file = open(fileName, "+r")
         portalocker.lock(file, portalocker.LockFlags.EXCLUSIVE)
         self.file = file
     
