@@ -62,12 +62,15 @@ class FileUpdater:
 
     def mine(self, numZeros, n, e):
         while True:
-            self.updateBlock(n, e)
-            fileBlock = FW.FW("block.json") 
-            block = json.loads(fileBlock.read())
-            if(block["block_hash"][:numZeros] == numZeros*"0"):
-                break
-            fileBlock.close()
+            try:
+                self.updateBlock(n, e)
+                fileBlock = FW.FW("block.json") 
+                block = json.loads(fileBlock.read())
+                if(block["block_hash"][:numZeros] == numZeros*"0"):
+                    break
+                fileBlock.close()
+            except:
+                print("mine skiped for one nounce")
 
     def addCurrency(self, nSend, eSend, dSend, pSend, qSend, nReceive, eReceive, tokens):
         fileBlock = FW.FW("block.json")
