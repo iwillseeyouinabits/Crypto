@@ -3,7 +3,7 @@ import FileUpdater
 import json
 import FW
 import traceback
-import re
+import ast
 
 
 class Server:
@@ -28,7 +28,7 @@ class Server:
             while True:
                 msgIn += clientsocket.recv(1).decode("utf-8")
                 try:
-                    msgIn = json.loads(msgIn.replace("\'", "\""))
+                    msgIn = ast.literal_eval(msgIn)
                     print("RECEIVED!!!")
                     try:
                         fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
