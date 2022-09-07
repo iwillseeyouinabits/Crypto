@@ -5,21 +5,25 @@ import FW
 import threading
 
 class API:
-    def __init__(self, nSend, eSend, dSend, pSend, qSend):
-        self.nSend = nSend
-        self.eSend = eSend
-        self.dSend = dSend
-        self.pSend = pSend
-        self.qSend = qSend
+    def __init__(self, name):
+        kesFile = FW.FW("kes")
+        kes = json.loads(kesFile.read())
+        kesFile.close()
+        self.nSend = kes[name]["sk"][0]
+        self.eSend = kes[name]["sk"][1]
+        self.dSend = kes[name]["sk"][2]
+        self.pSend = kes[name]["sk"][3]
+        self.qSend = kes[name]["sk"][4]
+        self.kes = kes
 
-    def mine(self, n, e, numZeros=5):
-        FileUpdater.FileUpdater().mine(numZeros, n, e)
+    def mine(self, name, numZeros=5):
+        FileUpdater.FileUpdater().mine(numZeros, self.kes[name]["pk"][0], self.kes[name]["pk"][1])
     
-    def addCurrency(self, nReceive, eReceive, tokens):
-        FileUpdater.FileUpdater().addCurrency(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, nReceive, eReceive, tokens)
+    def addCurrency(self, name, tokens):
+        FileUpdater.FileUpdater().addCurrency(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, self.kes[name]["pk"][0], self.kes[name]["pk"][1], tokens)
     
-    def addHttp(self, nWebsite, eWebsite, nHost, eHost, http, url):
-        FileUpdater.FileUpdater().addHttp(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, nWebsite, eWebsite, nHost, eHost, http, url)
+    def addHttp(self, webName, hostName, http, url):
+        FileUpdater.FileUpdater().addHttp(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, self.kes[webName]["pk"][0], self.kes[webName]["pk"][1], self.kes[hostName]["pk"][0], self.kes[hostName]["pk"][1], http, url)
     
     def addShell(self, website_name, shell_script):
         FileUpdater.FileUpdater().addShell(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, website_name, shell_script)
