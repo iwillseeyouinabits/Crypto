@@ -6,7 +6,7 @@ import threading
 
 class API:
     def __init__(self, name):
-        kesFile = FW.FW("kes")
+        kesFile = FW.FW("keys.json")
         kes = json.loads(kesFile.read())
         kesFile.close()
         self.nSend = kes[name]["sk"][0]
