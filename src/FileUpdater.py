@@ -19,8 +19,10 @@ class FileUpdater:
             block["block"]["currency"].append(data)
             fileBlock.write(json.dumps(block, indent=4))
             fileBlock.close()
+            print("added currency :D")
             return True
         fileBlock.close()
+        print("already have currency")
         return False
 
     def http(self, data):
@@ -30,8 +32,10 @@ class FileUpdater:
             block["block"]["http"].append(data)
             fileBlock.write(json.dumps(block, indent=4))
             fileBlock.close()
+            print("added http :D")
             return True
         fileBlock.close()
+        print("already have http :D")
         return False
 
     def shell(self, data):
@@ -41,8 +45,10 @@ class FileUpdater:
             block["block"]["shell"].append(data)
             fileBlock.write(json.dumps(block, indent=4))
             fileBlock.close()
+            print("added shell :D")
             return True
         fileBlock.close()
+        print("already have shell :D")
         return False
 
     def updateBlock(self, n, e):
