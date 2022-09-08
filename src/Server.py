@@ -25,7 +25,7 @@ class Server:
             clientsocket, address = self.socket.accept()
             print("accepted connection")
             msgIn = ""
-            while True:
+            for i in range(10000):
                 msgIn += clientsocket.recv(1).decode("utf-8")
                 try:
                     msgIn = ast.literal_eval(msgIn)
@@ -35,8 +35,11 @@ class Server:
                         break
                     except Exception:
                         print(traceback.format_exc())
-                except:
+                except Exception:
+                    if i == 9999:
+                        print(traceback.format_exc())
                     continue
+            print(msgIn)
 
     def connect(self, msg):
         msgOut = msg
