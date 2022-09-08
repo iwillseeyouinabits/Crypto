@@ -19,7 +19,9 @@ class FW:
     def read(self):
         while True:
             try:
-                return self.file.read()
+                fileText = self.file.read()
+                self.file.seek(0)
+                return fileText
             except Exception as e:
                 print(e)
     
