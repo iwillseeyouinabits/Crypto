@@ -55,33 +55,24 @@ class FileUpdater:
         fileBlockChain = FW.FW("blockChain.json")
         blockChain = json.loads(fileBlockChain.read())
         fileBlockChain.close()
-        print("load blockchain")
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
-        print("load block")
         block["block"]["timestamp"] = int(time.time())
         block["block"]["minner_address"] = [n, e]
         block["block"]["nonce"] = random.randrange(1000000)
         block["block"]["block_height"] = len(blockChain)
-        print("load block timestamp minner_address nonce and block_hight")
         if len(blockChain) > 0:
             block["block"]["previous_block_hash"] = blockChain[-1]["block_hash"]
         else:
             block["block"]["previous_block_hash"] = None
-        print("load block prev_hash")
         block["block_hash"] = hashlib.sha256(str(block["block"]).encode('utf-8')).hexdigest()
-        print("load block hash")
         fileBlock.write(json.dumps(block, indent=4))
-        print("write block")
         fileBlock.close()
-        print("close block FW")
 
     def mine(self, numZeros, n, e):
         while True:
             try:
-                print("start update")
                 self.updateBlock(n, e)
-                print("fin update")
                 fileBlock = FW.FW("block.json") 
                 block = json.loads(fileBlock.read())
                 if(block["block_hash"][:numZeros] == numZeros*"0"):
