@@ -72,7 +72,9 @@ class FileUpdater:
     def mine(self, numZeros, n, e):
         while True:
             try:
+                print("start update")
                 self.updateBlock(n, e)
+                print("fin update")
                 fileBlock = FW.FW("block.json") 
                 block = json.loads(fileBlock.read())
                 if(block["block_hash"][:numZeros] == numZeros*"0"):
