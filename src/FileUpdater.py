@@ -64,7 +64,7 @@ class FileUpdater:
         if len(blockChain) > 0:
             block["block"]["previous_block_hash"] = blockChain[-1]["block_hash"]
         else:
-            block["block"]["previous_block_hash"] = None
+            block["block"]["previous_block_hash"] = ""
         block["block_hash"] = hashlib.sha256(str(block["block"]).encode('utf-8')).hexdigest()
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
