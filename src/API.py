@@ -16,7 +16,7 @@ class API:
         self.qSend = kes[name]["sk"][4]
         self.kes = kes
 
-    def mine(self, numZeros=4):
+    def mine(self, numZeros=5):
         FileUpdater.FileUpdater().mine(numZeros, self.nSend, self.eSend)
     
     def addCurrency(self, name, tokens):

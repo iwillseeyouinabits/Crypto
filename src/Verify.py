@@ -28,7 +28,7 @@ class Verify:
         blockChain = json.loads(blockChainFile.read())
         blockChainFile.close()
         if len(blockChain) > 0:
-            previoseBlockHash = blockChain[len(blockChain)-1]["block_hash"]
+            previoseBlockHash = blockChain[-1]["block_hash"]
             if previoseBlockHash == hash:
                 return True
             return False
@@ -38,7 +38,7 @@ class Verify:
         blockChainFile = FW.FW("blockChain.json")
         blockChain = json.loads(blockChainFile.read())
         blockChainFile.close()
-        if len(blockChain) > 1:
+        if len(blockChain) > 0:
             stamp2 = blockChain[-1]["block"]["timestamp"]
             if stamp2 <= stamp <= int(time.time()):
                 return True
