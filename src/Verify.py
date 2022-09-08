@@ -5,7 +5,7 @@ import time
 import rsa
 import base64
 import FW
-
+import constants
 class Verify:
     def hash(self, hash, message):
         hash2 = hashlib.sha256(str(message).encode('utf-8')).hexdigest()
@@ -54,8 +54,8 @@ class Verify:
         for block in blockChain:
             wallet = 0
             if tuple(block["block"]["minner_address"]) in cashSums:
-                wallet += cashSums[tuple(block["block"]["minner_address"])]
-            wallet += 50000
+                wallet = cashSums[tuple(block["block"]["minner_address"])]
+            wallet = wallet + (self.tallyPot(block)/3)
             cashSums[tuple(block["block"]["minner_address"])] = wallet
             for transaction in block["block"]["currency"]:
                 wallet = 0
@@ -74,6 +74,16 @@ class Verify:
                     wallet += cashSums[tuple(transaction["http_body"]["client_adress"])]
                 wallet -= transaction["base_fee"] + transaction["gass_fee"]
                 cashSums[tuple(transaction["http_body"]["client_adress"])] = wallet
+                wallet = 0
+                if tuple(transaction["http_body"]["website_adress"]) in cashSums:
+                    wallet += cashSums[tuple(transaction["http_body"]["website_adress"])]
+                wallet += (self.tallyPot(block)/3)/(len(block["block"]["http"]))
+                cashSums[tuple(transaction["http_body"]["website_adress"])] = wallet
+                wallet = 0
+                if tuple(transaction["http_body"]["host_adress"]) in cashSums:
+                    wallet += cashSums[tuple(transaction["http_body"]["host_adress"])]
+                wallet += (self.tallyPot(block)/3) / (len(block["block"]["http"]))
+                cashSums[tuple(transaction["http_body"]["host_adress"])] = wallet
             for transaction in block["block"]["shell"]:
                 wallet = 0
                 if tuple(transaction["shell_body"]["website_adress"]) in cashSums:
@@ -188,3 +198,12 @@ class Verify:
                 return False
         print("GOOD BLOCK!   :D")
         return True
+    def tallyPot(self, block):
+        feeSum = 0
+        for transaction in block["block"]["currency"]:
+            feeSum += transaction["base_fee"] + transaction["gass_fee"]
+        for transaction in block["block"]["http"]:
+            feeSum += transaction["base_fee"] + transaction["gass_fee"]
+        for transaction in block["block"]["shell"]:
+            feeSum += transaction["base_fee"] + transaction["gass_fee"]
+        return feeSum + constants.MINERS_FEE
