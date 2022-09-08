@@ -297,7 +297,7 @@
                             65537
                         ],
                         "website_name": "Website with link",
-                        "shell_script": "cat > index.htm <<'EOF'  \n<h1> Hello World!</h1>\n  <p>\n    This is a link you should visit:\n    <a href=\"https://www.youtube.com/watch?v=xvFZjo5PgG0\">:)</a>\n  </p>\nEOF\nwhile true; do { \\\n  echo -ne \"HTTP/1.0 200 OK\\r\\nContent-Length: $(wc -c <index.htm)\\r\\n\\r\\n\"; \\\n  cat index.htm; } | nc -l -p 8080 ; \\ \ndone"
+                        "shell_script": "cat > index.htm <<'EOF'  \n<h1> Hello World!</h1>\n  <p>\n    This is a link you should visit:\n    <a href=\"https://www.youtube.com/watch?v=xvFZjo5PgG0\">here</a>\n  </p>\nEOF\nwhile true; do { \\\n  echo -ne \"HTTP/1.0 200 OK\\r\\nContent-Length: $(wc -c <index.htm)\\r\\n\\r\\n\"; \\\n  cat index.htm; } | nc -l -p 8080 ; \\ \ndone"
                     },
                     "shell_hash": "a285c7f853687ecf487dc795010d58ee0620c7f6d188efd11b236e5eb6eecac6",
                     "base_fee": 0.0025,

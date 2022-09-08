@@ -16,8 +16,8 @@ class API:
         self.qSend = kes[name]["sk"][4]
         self.kes = kes
 
-    def mine(self, name, numZeros=5):
-        FileUpdater.FileUpdater().mine(numZeros, self.kes[name]["pk"][0], self.kes[name]["pk"][1])
+    def mine(self, numZeros=5):
+        FileUpdater.FileUpdater().mine(numZeros, self.nSend, self.eSend)
     
     def addCurrency(self, name, tokens):
         FileUpdater.FileUpdater().addCurrency(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, self.kes[name]["pk"][0], self.kes[name]["pk"][1], tokens)
@@ -35,10 +35,10 @@ class API:
         print("start receiving")
         Server.Server().receive()
     
-    def startMining(self, n, e):
+    def startMining(self):
         while True:
             print("new mine")
-            self.mine(n, e)
+            self.mine()
             fileBlock = FW.FW("block.json")
             block = json.loads(fileBlock.read())
             fileBlock.close()
@@ -50,7 +50,7 @@ class API:
 
     def api(self):
         thread1 = threading.Thread(target=self.startReceiving, args=())
-        thread2 = threading.Thread(target=self.startMining, args=(self.nSend, self.eSend))
+        thread2 = threading.Thread(target=self.startMining, args=())
         thread1.start()
         thread2.start()
         thread1.join()
