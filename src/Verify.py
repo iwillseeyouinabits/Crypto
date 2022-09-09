@@ -52,10 +52,11 @@ class Verify:
         blockChainFile.close()
         cashSums = {}
         for block in blockChain:
+            blockPot = self.tallyPot(block)/3
             wallet = 0
             if tuple(block["block"]["minner_address"]) in cashSums:
-                wallet = cashSums[tuple(block["block"]["minner_address"])]
-            wallet = wallet + (self.tallyPot(block)/3)
+                wallet += cashSums[tuple(block["block"]["minner_address"])]
+            wallet = wallet + (blockPot)
             cashSums[tuple(block["block"]["minner_address"])] = wallet
             for transaction in block["block"]["currency"]:
                 wallet = 0
@@ -77,12 +78,12 @@ class Verify:
                 wallet = 0
                 if tuple(transaction["http_body"]["website_adress"]) in cashSums:
                     wallet += cashSums[tuple(transaction["http_body"]["website_adress"])]
-                wallet += (self.tallyPot(block)/3)/(len(block["block"]["http"]))
+                wallet += (blockPot)/(len(block["block"]["http"]))
                 cashSums[tuple(transaction["http_body"]["website_adress"])] = wallet
                 wallet = 0
                 if tuple(transaction["http_body"]["host_adress"]) in cashSums:
                     wallet += cashSums[tuple(transaction["http_body"]["host_adress"])]
-                wallet += (self.tallyPot(block)/3) / (len(block["block"]["http"]))
+                wallet += (blockPot) / (len(block["block"]["http"]))
                 cashSums[tuple(transaction["http_body"]["host_adress"])] = wallet
             for transaction in block["block"]["shell"]:
                 wallet = 0
