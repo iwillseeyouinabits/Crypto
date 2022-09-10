@@ -9,27 +9,24 @@ class API:
         kesFile = FW.FW("keys.json")
         kes = json.loads(kesFile.read())
         kesFile.close()
-        self.nSend = kes[name]["sk"][0]
-        self.eSend = kes[name]["sk"][1]
-        self.dSend = kes[name]["sk"][2]
-        self.pSend = kes[name]["sk"][3]
-        self.qSend = kes[name]["sk"][4]
+        self.pk = kes[name]["pk"]
+        self.sk = kes[name]["sk"]
         self.kes = kes
 
     def mine(self, numZeros=4):
-        FileUpdater.FileUpdater().mine(numZeros, self.nSend, self.eSend)
+        FileUpdater.FileUpdater().mine(numZeros, self.pk)
     
     def addCurrency(self, name, tokens):
-        FileUpdater.FileUpdater().addCurrency(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, self.kes[name]["pk"][0], self.kes[name]["pk"][1], tokens)
+        FileUpdater.FileUpdater().addCurrency(self.pk, self.sk, self.kes[name]["pk"], tokens)
     
     def addHttp(self, webName, hostName, http, url):
-        FileUpdater.FileUpdater().addHttp(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, self.kes[webName]["pk"][0], self.kes[webName]["pk"][1], self.kes[hostName]["pk"][0], self.kes[hostName]["pk"][1], http, url)
+        FileUpdater.FileUpdater().addHttp(self.pk, self.sk, self.kes[webName]["pk"], self.kes[hostName]["pk"], http, url)
     
     def addShell(self, website_name, shell_script):
-        FileUpdater.FileUpdater().addShell(self.nSend, self.eSend, self.dSend, self.pSend, self.qSend, website_name, shell_script)
+        FileUpdater.FileUpdater().addShell(self.pk, self.sk, website_name, shell_script)
 
     def addBlockToChain(self, block=None):
-        return FileUpdater.FileUpdater().addBlockToChain(self.nSend, self.eSend, block)
+        return FileUpdater.FileUpdater().addBlockToChain(self.pk, block)
     
     def startReceiving(self):
         print("start receiving")

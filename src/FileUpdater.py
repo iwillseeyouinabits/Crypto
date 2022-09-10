@@ -51,14 +51,14 @@ class FileUpdater:
         print("already have shell :D")
         return False
 
-    def updateBlock(self, n, e):
+    def updateBlock(self, pk):
         fileBlockChain = FW.FW("blockChain.json")
         blockChain = json.loads(fileBlockChain.read())
         fileBlockChain.close()
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
         block["block"]["timestamp"] = int(time.time())
-        block["block"]["minner_address"] = [n, e]
+        block["block"]["minner_address"] = pk
         block["block"]["nonce"] = random.randrange(1000000)
         block["block"]["block_height"] = len(blockChain)
         if len(blockChain) > 0:
@@ -69,10 +69,10 @@ class FileUpdater:
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
 
-    def mine(self, numZeros, n, e):
+    def mine(self, numZeros, pk):
         while True:
             try:
-                self.updateBlock(n, e)
+                self.updateBlock(pk)
                 fileBlock = FW.FW("block.json") 
                 block = json.loads(fileBlock.read())
                 if(block["block_hash"][:numZeros] == numZeros*"0"):
@@ -81,19 +81,19 @@ class FileUpdater:
             except:
                 print("mine skiped for one nounce")
 
-    def addCurrency(self, nSend, eSend, dSend, pSend, qSend, nReceive, eReceive, tokens):
+    def addCurrency(self, pk, sk, pkReceive, tokens):
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
         trans = {}
         transBody = {}
-        transBody["sender_adress"] = [nSend, eSend]
-        transBody["recipient_adress"] = [nReceive, eReceive]
+        transBody["sender_adress"] = pk
+        transBody["recipient_adress"] = pkReceive
         transBody["tokens"] = tokens
         trans["transaction_body"] = transBody
         trans["transaction_hash"] = hashlib.sha256(str(transBody).encode('utf-8')).hexdigest()
         trans["base_fee"] = 0.0025
         trans["gass_fee"] = len(transBody)*10/(2**30)
-        sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
+        sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey._load_pkcs1_der(base64.b64decode(sk)), "SHA-256")
         trans["transaction_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["currency"].append(trans)
         package = {"type": "currency"}
@@ -103,21 +103,21 @@ class FileUpdater:
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
 
-    def addHttp(self, nSend, eSend, dSend, pSend, qSend, nWebsite, eWebsite, nHost, eHost, http, url):
+    def addHttp(self, pk, sk, pkWebsite, pkHost, http, url):
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
         trans = {}
         transBody = {}
-        transBody["client_adress"] = [nSend, eSend]
-        transBody["website_adress"] = [nWebsite, eWebsite]
-        transBody["host_adress"] = [nHost, nHost]
+        transBody["client_adress"] = pk
+        transBody["website_adress"] = pkWebsite
+        transBody["host_adress"] = pkHost
         transBody["http_request"] = http
         transBody["host_URL"] = url
         trans["http_body"] = transBody
         trans["http_hash"] = hashlib.sha256(str(transBody).encode('utf-8')).hexdigest()
         trans["base_fee"] = 0.0025
         trans["gass_fee"] = len(transBody)*10/(2**30)
-        sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
+        sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey._load_pkcs1_der(base64.b64decode(sk)), "SHA-256")
         trans["http_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["http"].append(trans)
         package = {"type": "http"}
@@ -129,19 +129,19 @@ class FileUpdater:
         
         
 
-    def addShell(self, nSend, eSend, dSend, pSend, qSend, website_name, shell_script):
+    def addShell(self, pk, sk, website_name, shell_script):
         fileBlock = FW.FW("block.json")
         block = json.loads(fileBlock.read())
         trans = {}
         transBody = {}
-        transBody["website_adress"] = [nSend, eSend]
+        transBody["website_adress"] = pk
         transBody["website_name"] = website_name
         transBody["shell_script"] = shell_script
         trans["shell_body"] = transBody
         trans["shell_hash"] = hashlib.sha256(str(transBody).encode('utf-8')).hexdigest()
         trans["base_fee"] = 0.0025
         trans["gass_fee"] = len(transBody)*10/(2**30)
-        sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey(nSend, eSend, dSend, pSend, qSend), "SHA-256")
+        sig = rsa.sign(json.dumps(transBody).encode("utf-8"), rsa.PrivateKey._load_pkcs1_der(base64.b64decode(sk)), "SHA-256")
         trans["shell_signature"] = base64.b64encode(sig).decode("ascii")
         block["block"]["shell"].append(trans)
         package = {"type": "shell"}
@@ -151,7 +151,7 @@ class FileUpdater:
         fileBlock.write(json.dumps(block, indent=4))
         fileBlock.close()
 
-    def makeNewBlock(self, selfN, selfE):
+    def makeNewBlock(self, pk):
         fileBlockChain = FW.FW("blockChain.json")
         blockChain = json.loads(fileBlockChain.read())
         fileBlockChain.close()
@@ -163,7 +163,7 @@ class FileUpdater:
             block["previous_block_hash"] = blockChain[-1]["block_hash"]
         except:
             block["previous_block_hash"] = None
-        block["minner_address"] = [selfN, selfE]
+        block["minner_address"] = pk
         block["timestamp"] = int(time.time())
         block["nonce"] = 0
         block["currency"] = []
@@ -173,9 +173,9 @@ class FileUpdater:
         fileBlock = FW.FW("block.json")
         fileBlock.write(json.dumps(wholeBlock, indent=4))
         fileBlock.close()
-        self.updateBlock(selfN, selfE)
+        self.updateBlock(pk)
 
-    def addBlockToChain(self, selfN, selfE, block=None):
+    def addBlockToChain(self, pk, block=None):
         if block == None:
             fileBlock = FW.FW("block.json")
             block = json.loads(fileBlock.read())
@@ -188,14 +188,14 @@ class FileUpdater:
             blockChain.append(block)
             fileBlockChain.write(json.dumps(blockChain, indent=4))
             fileBlockChain.close()
-            self.makeNewBlock(selfN, selfE)
+            self.makeNewBlock(pk)
             return True
         return False
 
-    def handleNewInfo(self, selfN, selfE, data):
+    def handleNewInfo(self, pk, data):
         cashSums = Verify.Verify().quantifyBlockChainCashTotal()
         if data["type"] == "block":
-            if self.addBlockToChain(selfN, selfE, data["data"]):
+            if self.addBlockToChain(pk, data["data"]):
                 Server.Server().connect(json.dumps(data))
                 print("added block")
                 return True
