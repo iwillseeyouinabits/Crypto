@@ -31,7 +31,7 @@ class Server:
                     msgIn = ast.literal_eval(msgIn)
                     print("RECEIVED!!!")
                     try:
-                        fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
+                        fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()], msgIn)
                         break
                     except Exception:
                         print(traceback.format_exc())
