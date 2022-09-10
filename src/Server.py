@@ -16,20 +16,15 @@ class Server:
 
     def receive(self):
         fileUpdater = FileUpdater.FileUpdater()
-        print(str((self.ip, self.port)) + " !!!")
         self.socket.bind((self.ip, self.port))
-        print("binded")
         self.socket.listen(500)
-        print("listening on port")
         while True:
             clientsocket, address = self.socket.accept()
-            print("accepted connection")
             msgIn = ""
             while True:
                 msgIn += clientsocket.recv(1).decode("utf-8")
                 try:
                     msgIn = ast.literal_eval(msgIn)
-                    print("RECEIVED!!!")
                     try:
                         fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
                         break
@@ -40,15 +35,12 @@ class Server:
 
     def connect(self, msg):
         msgOut = msg
-        print("Connecting to ")
         for ip in self.ipDict:
             if not ip == self.get_ip_address():
                 self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.socket.connect((ip, self.portOther))
                 self.socket.send(bytes(msgOut, "utf-8"))
                 self.socket.close()
-                print("sent too => " + str((ip, self.portOther)))
-
     def get_ip_address(self):
         import socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

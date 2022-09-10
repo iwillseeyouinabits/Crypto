@@ -197,7 +197,6 @@ class Verify:
                 print("shell invalid")
                 print(transaction)
                 return False
-        print("GOOD BLOCK!   :D")
         return True
     def tallyPot(self, block):
         feeSum = 0

@@ -22,7 +22,6 @@ class FileUpdater:
             print("added currency :D")
             return True
         fileBlock.close()
-        print("already have currency")
         return False
 
     def http(self, data):
@@ -35,7 +34,6 @@ class FileUpdater:
             print("added http :D")
             return True
         fileBlock.close()
-        print("already have http :D")
         return False
 
     def shell(self, data):
@@ -48,7 +46,6 @@ class FileUpdater:
             print("added shell :D")
             return True
         fileBlock.close()
-        print("already have shell :D")
         return False
 
     def updateBlock(self, n, e):
@@ -180,15 +177,17 @@ class FileUpdater:
             fileBlock = FW.FW("block.json")
             block = json.loads(fileBlock.read())
             fileBlock.close()
-        else:
-            print("received new block")
-        if Verify.Verify().verify(block):
+        fileBlockChain = FW.FW("blockChain.json")
+        blockChain = json.loads(fileBlockChain.read())
+        fileBlockChain.close()
+        if (not block in blockChain) and Verify.Verify().verify(block):
             fileBlockChain = FW.FW("blockChain.json")
             blockChain = json.loads(fileBlockChain.read())
             blockChain.append(block)
             fileBlockChain.write(json.dumps(blockChain, indent=4))
             fileBlockChain.close()
             self.makeNewBlock(selfN, selfE)
+            print("added Block :D")
             return True
         return False
 
@@ -197,25 +196,21 @@ class FileUpdater:
         if data["type"] == "block":
             if self.addBlockToChain(selfN, selfE, data["data"]):
                 Server.Server().connect(json.dumps(data))
-                print("added block")
                 return True
         elif data["type"] == "currency":
             if Verify.Verify().currency(data["data"], cashSums):
                 if self.currency(data["data"]):
                     Server.Server().connect(json.dumps(data))
-                    print("added currency")
                     return True
         elif data["type"] == "http":
             if Verify.Verify().http(data["data"], cashSums):
                 if self.http(data["data"]):
                     Server.Server().connect(json.dumps(data))
-                    print("added http")
                     return True
         elif data["type"] == "shell":
             if Verify.Verify().shell(data["data"], cashSums):
                 if self.shell(data["data"]):
                     Server.Server().connect(json.dumps(data))
-                    print("added shell")
                     return True
         else:
             print("FAILED TO HAVE A 'type' FOR DATA")
