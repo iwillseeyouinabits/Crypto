@@ -113,7 +113,7 @@ class Verify:
         if not self.hash(transaction["transaction_hash"], transaction["transaction_body"]):
             print("hash is not of transaction body")
             return False
-        if not self.signature(transaction["transaction_signature"], transaction["transaction_body"], rsa.PublicKey(transaction["transaction_body"]["sender_adress"][0], transaction["transaction_body"]["sender_adress"][1])):
+        if not self.signature(transaction["transaction_signature"], transaction["transaction_body"], rsa.PublicKey._load_pkcs1_der(base64.b64decode(transaction["transaction_body"]["sender_adress"]))):
             print("signature is no good")
             return False
         if not (transaction["base_fee"] == 0.0025 or self.gassFee(transaction["transaction_body"], transaction["gass_fee"])):
@@ -131,7 +131,7 @@ class Verify:
         cashSums[tuple(transaction["http_body"]["client_adress"])] = wallet
         if not self.hash(transaction["http_hash"], transaction["http_body"]):
             return False
-        if not self.signature(transaction["http_signature"], transaction["http_body"], rsa.PublicKey(transaction["http_body"]["client_adress"][0], transaction["http_body"]["client_adress"][1])):
+        if not self.signature(transaction["http_signature"], transaction["http_body"], rsa.PublicKey._load_pkcs1_der(base64.b64decode(transaction["http_body"]["client_adress"]))):
             return False
         if not (transaction["base_fee"] == 0.0025 or self.gassFee(transaction["http_body"], transaction["gass_fee"])):
             return False
@@ -147,7 +147,7 @@ class Verify:
         cashSums[tuple(transaction["shell_body"]["website_adress"])] = wallet
         if not self.hash(transaction["shell_hash"], transaction["shell_body"]):
             return False
-        if not self.signature(transaction["shell_signature"], transaction["shell_body"], rsa.PublicKey(transaction["shell_body"]["website_adress"][0], transaction["shell_body"]["website_adress"][1])):
+        if not self.signature(transaction["shell_signature"], transaction["shell_body"], rsa.PublicKey._load_pkcs1_der(base64.b64decode(transaction["shell_body"]["website_adress"]))):
             return False
         if not (transaction["base_fee"] == 0.0025 or self.gassFee(transaction["shell_body"], transaction["gass_fee"])):
             return False
