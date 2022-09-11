@@ -29,17 +29,15 @@ class API:
         return FileUpdater.FileUpdater().addBlockToChain(self.pk, block)
     
     def startReceiving(self):
-        print("start receiving")
         Server.Server().receive()
     
     def startMining(self):
         while True:
-            print("new mine")
             self.mine()
             fileBlock = FW.FW("block.json")
             block = json.loads(fileBlock.read())
             fileBlock.close()
-            print("fin mine")
+            print("Mined Block")
             if self.addBlockToChain():
                 data = {"type": "block"}
                 data["data"] = block
