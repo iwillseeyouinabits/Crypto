@@ -26,7 +26,7 @@ class Server:
                 try:
                     msgIn = ast.literal_eval(msgIn)
                     try:
-                        fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()][0], self.ipDict[self.get_ip_address()][1], msgIn)
+                        fileUpdater.handleNewInfo(self.ipDict[self.get_ip_address()], msgIn)
                         break
                     except Exception:
                         print(traceback.format_exc())
